@@ -23,57 +23,47 @@ let courrentSlide = 0
 let tagLineContent = document.getElementById("tagLine")
 const dots = document.getElementById("dots")
 
-//slides ARROWS
+//////////////////////// slides ARROWS ///////////////////////
+
 const arrowLeft = document.querySelector(".arrow_left");
 const arrowRight = document.querySelector(".arrow_right");
 
-document.addEventListener("DOMContentLoaded",() => {
-	createDots();
-})
-arrowLeft.addEventListener("click", () => {
-	courrentSlide --
-	if (courrentSlide < 0) {
-		courrentSlide = slides.length -1
-	} 
-	tagLineContent.innerHTML = slides [courrentSlide].tagLine
-	banner.src = "assets/images/slideshow/" + slides [courrentSlide].image
-	updateDots();
-	
-})
-arrowRight.addEventListener("click", () => {
-	courrentSlide ++
-	if (courrentSlide >= slides.length) {
-		courrentSlide = 0
-	} 
-	tagLineContent.innerHTML = slides [courrentSlide].tagLine
-	banner.src = "assets/images/slideshow/" + slides [courrentSlide].image
-	updateDots();
-	
-})
+document.addEventListener("DOMContentLoaded", createDots);
 
+const updateBannerAndDots = () => {
+  tagLineContent.innerHTML = slides[courrentSlide].tagLine;
+  banner.src = `assets/images/slideshow/${slides[courrentSlide].image}`;
+  updateDots();
+};
 
-//DOTS
+const changeSlide = (direction) => {
+  courrentSlide = (courrentSlide + direction + slides.length) % slides.length;
+  updateBannerAndDots();
+};
+
+arrowLeft.addEventListener("click", () => changeSlide(-1));
+arrowRight.addEventListener("click", () => changeSlide(1));
+
+/////////////////////////// DOTS /////////////////////////////
 
 function createDots() {
-	for (let i = 0; i < slides.length; i++) {
-		const dot = document.createElement("span")
-			dot.classList.add("dot")
-			dots.appendChild(dot)
-			dot.addEventListener("click", () => {
-				courrentSlide = i
-				banner.src = slides[courrentSlide].image;
-				Text.innerHTML = slides[courrentSlide].tagLine
-				updateDots()
-			})
-		}
-		
-		let dot = document.querySelectorAll(".dot");
-		dot[0].classList.add("dot_selected");
+  slides.forEach((slide, i) => {
+    const dot = document.createElement("span");
+    dot.classList.add("dot");
+    dots.appendChild(dot);
+    dot.addEventListener("click", () => {
+      courrentSlide = i;
+      updateBannerAndDots();
+    });
+  });
+
+  document.querySelectorAll(".dot")[0].classList.add("dot_selected");
 }
 
 function updateDots() {
-	document.querySelectorAll(".dot").forEach(el => {
-		el.classList.remove("dot_selected")
-	})
-	document.querySelectorAll(".dot") [courrentSlide].classList.add("dot_selected")
+  document.querySelectorAll(".dot").forEach((el, i) => {
+    el.classList.toggle("dot_selected", i === courrentSlide);
+  });
 }
+
+
