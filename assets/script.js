@@ -33,12 +33,14 @@ document.addEventListener("DOMContentLoaded", createDots);
 const updateBannerAndDots = () => {
   tagLineContent.innerHTML = slides[courrentSlide].tagLine;
   banner.src = `assets/images/slideshow/${slides[courrentSlide].image}`;
-  updateDots();
+ 
 };
 
 const changeSlide = (direction) => {
   courrentSlide = (courrentSlide + direction + slides.length) % slides.length;
   updateBannerAndDots();
+  updateDots();
+  
 };
 
 arrowLeft.addEventListener("click", () => changeSlide(-1));
@@ -54,6 +56,7 @@ function createDots() {
     dot.addEventListener("click", () => {
       courrentSlide = i;
       updateBannerAndDots();
+      updateDots();
     });
   });
 
